@@ -1,0 +1,103 @@
+{{!--
+  ******************************************************************************
+  * file           : mx_rgbled_no_control_template.h.hbs
+  * brief          : Code generation for the RGB LED part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+~--}}
+/**
+  ******************************************************************************
+  * file           : mx_rgbled_no_control.h
+  * brief          : Code generation for the RGB LED part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) {{#unless (eq 2026 (toInt (year)))}}2026-{{/unless}}{{year}} STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the mx_rgbled_license.md file
+  * in the same directory as the generated code.
+  * If no mx_rgbled_license.md file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+{{assign 'rgbled_instances' (@root.SWConfigurationAPI.getInstances  "STMicroelectronics::Board Part:STM32CubeMX2 Config:RGBLED")~}}
+
+/* Define to prevent recursive inclusion ----------------------------------- */
+#ifndef MX_RGBLED_NO_CONTROL_H
+#define MX_RGBLED_NO_CONTROL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Includes ---------------------------------------------------------------- */
+#include "rgbled.h"
+#include "mx_hal_def.h"
+
+/* Exported macros --------------------------------------------------------- */
+{{#each @root.rgbled_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{assign 'instance_index' @index~}}
+{{#with @root.ctx}}
+{{#if (eq info.interface 'PWM NO CONTROL')~}}
+/* Part Config ID */
+#define MX_RGBLED_{{@root.instance_index}}                                  {{@root.instance_index}}U
+
+{{#if (length info.labels)}}
+/* User-defined aliases for the RGBLED instance IDs and getter functions */
+{{else}}
+/* No user alias is defined for MX_RGBLED_{{@root.instance_index}}. */
+{{/if}}
+{{#each info.labels}}
+#define {{this}}                              MX_RGBLED_{{@root.instance_index}}
+{{/each}}
+{{#each info.labels}}
+#define {{lowercase this}}_getobject()       mx_rgbled_{{@root.instance_index}}_getobject()
+{{/each}}
+
+/* Resource bindings */
+{{#with resourcesAllocation.pwmNoControlCfg}}
+#define MX_RGBLED_{{@root.instance_index}}_RED_TIM_GETHANDLE()          mx_{{lowercase red.timInstance.selection}}_gethandle()
+#define MX_RGBLED_{{@root.instance_index}}_RED_TIM_CHANNEL              {{red.timChannel}}
+#define MX_RGBLED_{{@root.instance_index}}_GREEN_TIM_GETHANDLE()        mx_{{lowercase green.timInstance.selection}}_gethandle()
+#define MX_RGBLED_{{@root.instance_index}}_GREEN_TIM_CHANNEL            {{green.timChannel}}
+#define MX_RGBLED_{{@root.instance_index}}_BLUE_TIM_GETHANDLE()         mx_{{lowercase blue.timInstance.selection}}_gethandle()
+#define MX_RGBLED_{{@root.instance_index}}_BLUE_TIM_CHANNEL             {{blue.timChannel}}
+{{#if dmaSupport}}
+#define MX_RGBLED_{{@root.instance_index}}_PATTERN_TIM_GETHANDLE()      mx_{{lowercase patternTimer.timInstance.selection}}_gethandle()
+{{else}}
+#define MX_RGBLED_{{@root.instance_index}}_PATTERN_TIM_GETHANDLE()      NULL
+{{/if}}
+{{/with~}}
+
+{{/if~}}
+{{/with~}}
+{{/each~}}
+
+/* Exported functions ------------------------------------------------------ */
+{{#each @root.rgbled_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{assign 'instance_index' @index~}}
+{{#with @root.ctx}}
+{{#if (eq info.interface 'PWM NO CONTROL')~}}
+rgbled_obj_t *mx_rgbled_{{@root.instance_index}}_getobject(void);
+{{/if~}}
+{{/with~}}
+{{/each~}}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* MX_RGBLED_NO_CONTROL_H */

@@ -1,0 +1,111 @@
+{{!--
+  ******************************************************************************
+  * file           : mx_rgbled_no_control_template.c.hbs
+  * brief          : Code generation for the RGB LED part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+~--}}
+/**
+  ******************************************************************************
+  * file           : mx_rgbled_no_control.c
+  * brief          : Code generation for the RGB LED part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) {{#unless (eq 2026 (toInt (year)))}}2026-{{/unless}}{{year}} STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the mx_rgbled_license.md file
+  * in the same directory as the generated code.
+  * If no mx_rgbled_license.md file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+{{assign 'rgbled_instances' (@root.SWConfigurationAPI.getInstances  "STMicroelectronics::Board Part:STM32CubeMX2 Config:RGBLED")~}}
+
+/* Includes ---------------------------------------------------------------- */
+#include "mx_rgbled_no_control.h"
+
+/* Private objects --------------------------------------------------------- */
+{{#each @root.rgbled_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{assign 'instance_index' @index~}}
+{{#with @root.ctx}}
+{{#if (eq info.interface 'PWM NO CONTROL')~}}
+static rgbled_obj_t rgbled_{{@root.instance_index}}_obj;
+{{/if~}}
+{{/with~}}
+{{/each~}}
+
+/**
+  * @brief Bind generated TIM resources to the RGBLED object.
+  * @param pobj pointer to the RGBLED object.
+  * @retval 0 on success, -1 otherwise.
+  */
+int32_t rgbled_io_init(rgbled_obj_t *pobj)
+{
+  if (pobj == NULL)
+  {
+    return -1;
+  }
+
+  switch (pobj->id)
+  {
+{{#each @root.rgbled_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{assign 'instance_index' @index~}}
+{{#with @root.ctx}}
+{{#if (eq info.interface 'PWM NO CONTROL')~}}
+    case MX_RGBLED_{{@root.instance_index}}:
+  pobj->red.phtim = MX_RGBLED_{{@root.instance_index}}_RED_TIM_GETHANDLE();
+  pobj->red.pwm_channel = MX_RGBLED_{{@root.instance_index}}_RED_TIM_CHANNEL;
+  pobj->green.phtim = MX_RGBLED_{{@root.instance_index}}_GREEN_TIM_GETHANDLE();
+  pobj->green.pwm_channel = MX_RGBLED_{{@root.instance_index}}_GREEN_TIM_CHANNEL;
+  pobj->blue.phtim = MX_RGBLED_{{@root.instance_index}}_BLUE_TIM_GETHANDLE();
+  pobj->blue.pwm_channel = MX_RGBLED_{{@root.instance_index}}_BLUE_TIM_CHANNEL;
+{{#if resourcesAllocation.pwmNoControlCfg.dmaSupport}}
+#if defined(RGBLED_PATTERN_PLAYBACK) && (RGBLED_PATTERN_PLAYBACK == 1)
+      pobj->pattern_timer.phtim = MX_RGBLED_{{@root.instance_index}}_PATTERN_TIM_GETHANDLE();
+#endif /* RGBLED_PATTERN_PLAYBACK */
+{{else}}
+#if defined(RGBLED_PATTERN_PLAYBACK) && (RGBLED_PATTERN_PLAYBACK == 1)
+      pobj->pattern_timer.phtim = NULL;
+#endif /* RGBLED_PATTERN_PLAYBACK */
+{{/if}}
+      break;
+{{/if~}}
+{{/with~}}
+{{/each~}}
+    default:
+      return -1;
+  }
+
+  return 0;
+}
+
+{{#each @root.rgbled_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{assign 'instance_index' @index~}}
+{{#with @root.ctx}}
+{{#if (eq info.interface 'PWM NO CONTROL')~}}
+/**
+  * @brief Return the generated RGBLED object for instance {{@root.instance_index}}.
+  * @retval RGBLED object pointer.
+  */
+rgbled_obj_t *mx_rgbled_{{@root.instance_index}}_getobject(void)
+{
+  return &rgbled_{{@root.instance_index}}_obj;
+}
+{{/if~}}
+{{/with~}}
+{{/each~}}

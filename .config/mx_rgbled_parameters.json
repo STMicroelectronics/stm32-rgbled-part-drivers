@@ -1,0 +1,1439 @@
+{
+  "componentid": "::Board Part:STM32CubeMX2 Config:RGBLED",
+  "type": "object",
+  "grammarVersion": "3.8.0",
+  "license": "Copyright (c) 2026 STMicroelectronics",
+  "properties": {
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "title": "RGBLED configuration",
+          "type": "object",
+          "properties": {
+            "labels": {
+              "type": "array",
+              "title": "SW Label for RGBLED objects",
+              "description": "Labels create aliases for the generated object ID and getter function inside mx_rgbled.h.",
+              "items": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 32,
+                "unique": "project",
+                "default": "",
+                "actions": [
+                  {
+                    "type": "error",
+                    "condition": "!/^[A-Za-z_][A-Za-z0-9_]*$/.test($value)",
+                    "message": "Name must be a valid C identifier: start with a letter or underscore, and contain only letters, digits, or underscores."
+                  }
+                ]
+              }
+            },
+            "interface": {
+              "title": "Interface selection",
+              "description": "Select the Interface to be configured.",
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "PWM NO CONTROL",
+                  "title": "PWM NO CONTROL"
+                },
+                {
+                  "const": "PWM THRESHOLD CONTROL",
+                  "title": "PWM THRESHOLD CONTROL"
+                },
+                {
+                  "const": "PWM BURST CONTROL",
+                  "title": "PWM BURST CONTROL"
+                }
+              ],
+              "default": "PWM NO CONTROL"
+            }
+          }
+        },
+        "resourcesAllocation": {
+          "type": "object",
+          "properties": {
+            "pwmNoControlCfg": {
+              "type": "object",
+              "title": "PWM resource binding",
+              "description": "Bind the TIM handles and channels used by the red, green, and blue outputs, and optionally the DMA transition timer.",
+              "actions": [
+                {
+                  "type": "include",
+                  "condition": "$info.interface === 'PWM NO CONTROL'"
+                }
+              ],
+              "properties": {
+                "red": {
+                  "type": "object",
+                  "title": "Red channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the red channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmNoControlCfg.red.timInstance?.selection",
+                          "message": "Please select a TIM instance for the red channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmNoControlCfg.red.timChannel || $resourcesAllocation.pwmNoControlCfg.red.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "green": {
+                  "type": "object",
+                  "title": "Green channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the green channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmNoControlCfg.green.timInstance?.selection",
+                          "message": "Please select a TIM instance for the green channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmNoControlCfg.green.timChannel || $resourcesAllocation.pwmNoControlCfg.green.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "blue": {
+                  "type": "object",
+                  "title": "Blue channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the blue channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmNoControlCfg.blue.timInstance?.selection",
+                          "message": "Please select a TIM instance for the blue channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmNoControlCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmNoControlCfg.blue.timChannel || $resourcesAllocation.pwmNoControlCfg.blue.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "dmaSupport": {
+                  "type": "boolean",
+                  "title": "Generate transition timer binding",
+                  "description": "Enable this only when the project uses USE_HAL_TIM_DMA == 1 and wants generated code to bind the pattern pacing timer.",
+                  "default": false
+                },
+                "patternTimer": {
+                  "type": "object",
+                  "title": "Transition timer",
+                  "description": "Optional timer used to pace DMA-based fades and patterns.",
+                  "actions": [
+                    {
+                      "type": "include",
+                      "condition": "$resourcesAllocation.pwmNoControlCfg.dmaSupport"
+                    }
+                  ],
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral used to pace DMA requests during animations.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "$resourcesAllocation.pwmNoControlCfg.dmaSupport && !$resourcesAllocation.pwmNoControlCfg.patternTimer.timInstance?.selection",
+                          "message": "Please select a TIM instance for the transition timer."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "pwmBurstCfg": {
+              "type": "object",
+              "title": "PWM resource binding",
+              "description": "Bind the TIM handles and channels used by the red, green, and blue outputs, and optionally the DMA transition timer.",
+              "actions": [
+                {
+                  "type": "include",
+                  "condition": "$info.interface === 'PWM BURST CONTROL'"
+                }
+              ],
+              "properties": {
+                "red": {
+                  "type": "object",
+                  "title": "Red channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the red channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmBurstCfg.red.timInstance?.selection",
+                          "message": "Please select a TIM instance for the red channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmBurstCfg.red.timChannel || $resourcesAllocation.pwmBurstCfg.red.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "green": {
+                  "type": "object",
+                  "title": "Green channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the green channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmBurstCfg.green.timInstance?.selection",
+                          "message": "Please select a TIM instance for the green channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmBurstCfg.green.timChannel || $resourcesAllocation.pwmBurstCfg.green.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "blue": {
+                  "type": "object",
+                  "title": "Blue channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the blue channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmBurstCfg.blue.timInstance?.selection",
+                          "message": "Please select a TIM instance for the blue channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmBurstCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmBurstCfg.blue.timChannel || $resourcesAllocation.pwmBurstCfg.blue.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "patternTimer": {
+                  "type": "object",
+                  "title": "Burst pacing timer",
+                  "description": "Timer used to pace the burst windows and the DMA-based fades and patterns. Mandatory for burst control.",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral used to pace DMA requests during animations.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmBurstCfg.patternTimer.timInstance?.selection",
+                          "message": "Please select a TIM instance for the playback / burst pacing timer."
+                        }
+                      ]
+                    }
+                  }
+                },
+                "advancedCfg": {
+                  "type": "object",
+                  "title": "Advanced current-mode resources",
+                  "description": "Per-channel comparator and DAC bindings used by the advanced current-mode path. Mandatory for burst control.",
+                  "properties": {
+                    "red": {
+                      "type": "object",
+                      "title": "Red channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the red channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.red.compInstance?.selection",
+                              "message": "Please select a comparator instance for the red channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the red channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.red.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the red channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    },
+                    "green": {
+                      "type": "object",
+                      "title": "Green channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the green channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.green.compInstance?.selection",
+                              "message": "Please select a comparator instance for the green channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the green channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.green.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the green channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    },
+                    "blue": {
+                      "type": "object",
+                      "title": "Blue channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the blue channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.blue.compInstance?.selection",
+                              "message": "Please select a comparator instance for the blue channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the blue channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmBurstCfg.advancedCfg.blue.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the blue channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "pwmThresholdCfg": {
+              "type": "object",
+              "title": "PWM resource binding",
+              "description": "Bind the TIM handles and channels used by the red, green, and blue outputs, and optionally the DMA transition timer.",
+              "actions": [
+                {
+                  "type": "include",
+                  "condition": "$info.interface === 'PWM THRESHOLD CONTROL'"
+                }
+              ],
+              "properties": {
+                "red": {
+                  "type": "object",
+                  "title": "Red channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the red channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmThresholdCfg.red.timInstance?.selection",
+                          "message": "Please select a TIM instance for the red channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.red.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmThresholdCfg.red.timChannel || $resourcesAllocation.pwmThresholdCfg.red.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "green": {
+                  "type": "object",
+                  "title": "Green channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the green channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmThresholdCfg.green.timInstance?.selection",
+                          "message": "Please select a TIM instance for the green channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.green.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmThresholdCfg.green.timChannel || $resourcesAllocation.pwmThresholdCfg.green.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "blue": {
+                  "type": "object",
+                  "title": "Blue channel",
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral configured for PWM output on the blue channel.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "!$resourcesAllocation.pwmThresholdCfg.blue.timInstance?.selection",
+                          "message": "Please select a TIM instance for the blue channel."
+                        }
+                      ]
+                    },
+                    "timChannel": {
+                    "type": "string",
+                    "title": "TIM channel",
+                    "oneOf": [
+                       {
+                         "const": "HAL_TIM_CHANNEL_1",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC1')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_2",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC2')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_3",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC3')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_4",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC4')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_5",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC5')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_6",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC6')?.use_channel ?? false"
+                           }
+                         ]
+                       },
+                       {
+                         "const": "HAL_TIM_CHANNEL_7",
+                         "actions": [
+                           {
+                             "type": "include",
+                             "condition": "$get('sw-config.peripheral-parameter-value', $resourcesAllocation.pwmThresholdCfg.blue.timInstance.selection, 'channels')?.find(channel => channel._foreignKey === 'CC7')?.use_channel ?? false"
+                           }
+                         ]
+                       }
+                     ],
+                     "actions": [
+                       {
+                         "type": "error",
+                         "condition": "!$resourcesAllocation.pwmThresholdCfg.blue.timChannel || $resourcesAllocation.pwmThresholdCfg.blue.timChannel === ''",
+                         "message": "Please select a valid TIM channel."
+                       }
+                     ]
+                    }
+                  }
+                },
+                "dmaSupport": {
+                  "type": "boolean",
+                  "title": "Generate transition timer binding",
+                  "description": "Enable this only when the project uses USE_HAL_TIM_DMA == 1 and wants generated code to bind the pattern pacing timer.",
+                  "default": false
+                },
+                "patternTimer": {
+                  "type": "object",
+                  "title": "Transition timer",
+                  "description": "Optional timer used to pace DMA-based fades and patterns.",
+                  "actions": [
+                    {
+                      "type": "include",
+                      "condition": "$resourcesAllocation.pwmThresholdCfg.dmaSupport"
+                    }
+                  ],
+                  "properties": {
+                    "timInstance": {
+                      "type": "object",
+                      "title": "TIM instance",
+                      "description": "Select the TIM peripheral used to pace DMA requests during animations.",
+                      "objectType": "bind.peripheral.config",
+                      "criteria": {
+                        "peripheralType": [
+                          "tim"
+                        ]
+                      },
+                      "actions": [
+                        {
+                          "type": "error",
+                          "condition": "$resourcesAllocation.pwmThresholdCfg.dmaSupport && !$resourcesAllocation.pwmThresholdCfg.patternTimer.timInstance?.selection",
+                          "message": "Please select a TIM instance for the playback / burst pacing timer."
+                        }
+                      ]
+                    }
+                  }
+                },
+                "advancedCfg": {
+                  "type": "object",
+                  "title": "Advanced current-mode resources",
+                  "description": "Per-channel comparator and DAC bindings used by the current-mode (DAC + COMP) path. Mandatory for current control.",
+                  "properties": {
+                    "red": {
+                      "type": "object",
+                      "title": "Red channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the red channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.red.compInstance?.selection",
+                              "message": "Please select a comparator instance for the red channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the red channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.red.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the red channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    },
+                    "green": {
+                      "type": "object",
+                      "title": "Green channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the green channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.green.compInstance?.selection",
+                              "message": "Please select a comparator instance for the green channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the green channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.green.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the green channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    },
+                    "blue": {
+                      "type": "object",
+                      "title": "Blue channel",
+                      "properties": {
+                        "compInstance": {
+                          "type": "object",
+                          "title": "Comparator instance",
+                          "description": "Comparator sensing the blue channel forward current. Its inverting input must be the bound DAC channel and its output polarity must stay non-inverted.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "comp"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.blue.compInstance?.selection",
+                              "message": "Please select a comparator instance for the blue channel."
+                            }
+                          ]
+                        },
+                        "dacInstance": {
+                          "type": "object",
+                          "title": "DAC instance",
+                          "description": "DAC generating the blue channel current threshold. Must be configured with internal output connection and 12-bit right alignment.",
+                          "objectType": "bind.peripheral.config",
+                          "criteria": {
+                            "peripheralType": [
+                              "dac"
+                            ]
+                          },
+                          "actions": [
+                            {
+                              "type": "error",
+                              "condition": "!$resourcesAllocation.pwmThresholdCfg.advancedCfg.blue.dacInstance?.selection",
+                              "message": "Please select a DAC instance for the blue channel."
+                            }
+                          ]
+                        },
+                        "dacChannel": {
+                          "type": "string",
+                          "title": "DAC channel",
+                          "description": "DAC channel feeding the comparator inverting input.",
+                          "oneOf": [
+                            {
+                              "const": "HAL_DAC_CHANNEL_1",
+                              "title": "DAC channel 1"
+                            }
+                          ],
+                          "default": "HAL_DAC_CHANNEL_1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

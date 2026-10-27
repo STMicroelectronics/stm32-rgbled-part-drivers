@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:stm32="https://developer.st.com/schemas/stm32cube/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.7.55" xsi:noNamespaceSchemaLocation="PACK.xsd" xsi:schemaLocation="https://developer.st.com/schemas/stm32cube/1.0.0 stm32cube.xsd">
+  <vendor>STMicroelectronics</vendor>
+  <name>rgbled_part_drivers</name>
+  <description>RGBLED Part Drivers SW Pack</description>
+  <url>https://developer.st.com/st-pack-server/api/v1/pack/</url>
+  <repository type="git">https://github.com/STMicroelectronics/stm32-rgbled-part-drivers</repository>
+  <supportContact/>
+  <license>LICENSE.md</license>
+  <changelogs>
+    <changelog id="Release Notes" name="Release_Notes.html"/>
+  </changelogs>
+  <environments>
+    <environment name="STM32Cube">
+      <stm32:pack type="PARTDRV" friendlyName="rgbled" shortDesc="rgbled part driver">
+        <relocation-info parent="part_drivers" layer="" element=""/>
+        <compatibility>
+          <release version="2.0.0">
+            <applicable-schema schemaType="sw-configuration" schemaVersion="3.8.0"/>
+            <applicable-api-group apiType="codegen-getters">
+              <applicable-api apiType="SWConfigurationAPI" apiVersion="1.0.0"/>
+            </applicable-api-group>
+          </release>
+        </compatibility>
+      </stm32:pack>
+    </environment>
+  </environments>
+  <ECCN>
+    <ECCN-EU>NEC</ECCN-EU>
+    <ECCN-US>EAR99</ECCN-US>
+  </ECCN>
+  <releases>
+    <release version="2.0.0" date="2026-08-25">
+      Initial version of STMicroelectronics.rgbled_part_drivers pack
+    </release>
+  </releases>
+  <keywords>
+    <keyword>STMicroelectronics</keyword>
+    <keyword>ST</keyword>
+    <keyword>STM32</keyword>
+    <keyword>Parts</keyword>
+    <keyword>Drivers</keyword>
+    <keyword>RGBLED</keyword>
+    <keyword>TIM</keyword>
+    <keyword>PWM</keyword>
+    <keyword>DMA</keyword>
+  </keywords>
+  <conditions>
+    <condition id="RGBLED Core Condition">
+      <description>STMicroelectronics RGBLED Core Driver</description>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="TIM"/>
+    </condition>
+    <condition id="RGBLED Advanced Condition">
+      <description>STMicroelectronics RGBLED current-mode (DAC + COMP) Driver</description>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="TIM"/>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="DAC"/>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="COMP"/>
+    </condition>
+    <condition id="RGBLED CFG Condition">
+      <description>STMicroelectronics configuration for RGBLED part driver</description>
+    </condition>
+  </conditions>
+  <generators>
+    <generator id="rgbled_mx2codegen">
+      <description>ST Microelectronics: STM32 Cube Code Generator for RGBLED Drivers Pack</description>
+      <exe>
+        <command host="win">.config/gen_code.bat</command>
+        <command host="linux">.config/gen_code.sh</command>
+        <command host="mac">.config/gen_code.sh</command>
+        <argument>rgbled_mx2codegen</argument>
+        <argument>$G</argument>
+        <argument>STMicroelectronics.rgbled_part_drivers.gpdsc.hbs</argument>
+        <argument mode="dry-run">--dry-run</argument>
+      </exe>
+      <gpdsc name="$P/STMicroelectronics.rgbled_part_drivers.gpdsc"/>
+    </generator>
+  </generators>
+  <components>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="RGBLED" Csub="PWM NO CONTROL" Cversion="1.0.0" condition="RGBLED Core Condition">
+      <description>Driver for RGB LEDs driven by STM32 HAL TIM PWM channels</description>
+      <files>
+        <file category="doc" name="README.md"/>
+        <file category="doc" name="SW_Security_Level.md"/>
+        <file category="doc" name="doc/st_logo.png"/>
+        <file category="header" name="pwm_no_control/rgbled.h"/>
+        <file category="source" name="pwm_no_control/rgbled.c"/>
+      </files>
+    </component>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="RGBLED" Csub="PWM THRESHOLD CONTROL" Cversion="1.0.0" condition="RGBLED Advanced Condition">
+      <description>Driver for RGB LEDs driven by STM32 HAL TIM PWM channels</description>
+      <files>
+        <file category="doc" name="README.md"/>
+        <file category="doc" name="SW_Security_Level.md"/>
+        <file category="doc" name="doc/st_logo.png"/>
+        <file category="header" name="pwm_threshold_control/rgbled.h"/>
+        <file category="source" name="pwm_threshold_control/rgbled.c"/>
+      </files>
+    </component>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="RGBLED" Csub="PWM BURST CONTROL" Cversion="1.0.0" condition="RGBLED Advanced Condition">
+      <description>Driver for RGB LEDs driven by STM32 HAL TIM PWM channels</description>
+      <files>
+        <file category="doc" name="README.md"/>
+        <file category="doc" name="SW_Security_Level.md"/>
+        <file category="doc" name="doc/st_logo.png"/>
+        <file category="header" name="pwm_burst_control/rgbled.h"/>
+        <file category="source" name="pwm_burst_control/rgbled.c"/>
+      </files>
+    </component>
+    <component generator="rgbled_mx2codegen" Cclass="Board Part" Cgroup="STM32CubeMX2 Config" Csub="RGBLED" Cversion="1.0.0" condition="RGBLED CFG Condition" maxInstances="10">
+      <description>RGBLED STM32CubeMX2 Config</description>
+      <environments>
+        <environment name="STM32Cube">
+          <stm32:component>
+            <default-instance-name-prefix>RGBLED</default-instance-name-prefix>
+            <supported-part-types>
+              <supported-part-type Hvendor="LUMEX" Hname="SML-LX5050SIUPGUBC"/>
+            </supported-part-types>
+          </stm32:component>
+        </environment>
+      </environments>
+      <files>
+        <file category="genAsset" name=".config/gen_code.bat"/>
+        <file category="genAsset" name=".config/gen_code.sh"/>
+        <file category="genAsset" name=".config/STMicroelectronics.rgbled_part_drivers.gpdsc.hbs"/>
+        <file category="genAsset" name=".config/mx_rgbled_parameters.json"/>
+        <file category="genAsset" name=".config/template/hooks/mapping_hook.js"/>
+        <file category="genAsset" name=".config/template/helpers/comp_helpers.js"/>
+        <file category="genAsset" name=".config/template/pwm_no_control/mx_rgbled_no_control_template.h.hbs"/>
+        <file category="genAsset" name=".config/template/pwm_no_control/mx_rgbled_no_control_template.c.hbs"/>
+        <file category="genAsset" name=".config/template/pwm_threshold_control/mx_rgbled_threshold_control_template.h.hbs"/>
+        <file category="genAsset" name=".config/template/pwm_threshold_control/mx_rgbled_threshold_control_template.c.hbs"/>
+        <file category="genAsset" name=".config/template/pwm_burst_control/mx_rgbled_burst_control_template.h.hbs"/>
+        <file category="genAsset" name=".config/template/pwm_burst_control/mx_rgbled_burst_control_template.c.hbs"/>
+        <file category="genAsset" name=".config/template/license/mx_rgbled_license_template.md.hbs"/>
+      </files>
+    </component>
+  </components>
+</package>
